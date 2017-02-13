@@ -21,25 +21,39 @@ app.post('/scripture', function(req, res){
     res.redirect('/');
 });
 
+function format(arr) {
+    for (i=0; i<arr.length; i++) {
+        if (arr[i].length == 1) {
+            arr[i] = "00" + arr[i];
+        } else if (arr[i].length == 2) {
+            arr[i] = "0" + arr[i];
+        }
+    }
+    console.log(arr);
+    return arr;
+}
+
 function scripture(book, chapter, verseNum) {
     if (verseNum.indexOf(',') > -1) {
         verseNum = verseNum.split(',');
-    }
-    console.log(verseNum);
-    for (i=0; i<verseNum.length; i++) {
-        if (verseNum[i].length == 1) {
-            verseNum[i] = "00" + verseNum[i];
-        } else if (verseNum[i].length == 2) {
-            verseNum[i] = "0" + verseNum[i];
+        verseNum = format(verseNum);
+    } else if(verseNum.indexOf('-') > -1) {
+        verseNum = verseNum.split('-');
+        var lowEnd = verseNum[0];
+        var highEnd = verseNum[1];
+        verseNum = [];
+        for (x=lowEnd; x<=highEnd; x++) {
+            verseNum.push(x.toString());
+        }
+        verseNum = format(verseNum);
+    } else {
+        if (verseNum.length == 1) {
+            verseNum = "00" + verseNum;
+        } else if (verseNum.length == 2) {
+            verseNum = "0" + verseNum;
         }
     }
     
-    console.log(verseNum);
-    /*if (verseNum.length == 1) {
-        verseNum = "00" + verseNum;
-    } else if (verseNum.length == 2) {
-        verseNum = "0" + verseNum;
-    }*/
     var pageToVisit = ''; 
     book = book.replace(/^\s\s*/, '').replace(/\s\s*$/, '').replace(/ /g,"-");;
     pageToVisit = "https://www.jw.org/en/publications/bible/nwt/books/" + book + "/" + chapter + "/";
