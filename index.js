@@ -22,11 +22,24 @@ app.post('/scripture', function(req, res){
 });
 
 function scripture(book, chapter, verseNum) {
-    if (verseNum.length == 1) {
+    if (verseNum.indexOf(',') > -1) {
+        verseNum = verseNum.split(',');
+    }
+    console.log(verseNum);
+    for (i=0; i<verseNum.length; i++) {
+        if (verseNum[i].length == 1) {
+            verseNum[i] = "00" + verseNum[i];
+        } else if (verseNum[i].length == 2) {
+            verseNum[i] = "0" + verseNum[i];
+        }
+    }
+    
+    console.log(verseNum);
+    /*if (verseNum.length == 1) {
         verseNum = "00" + verseNum;
     } else if (verseNum.length == 2) {
         verseNum = "0" + verseNum;
-    }
+    }*/
     var pageToVisit = ''; 
     book = book.replace(/^\s\s*/, '').replace(/\s\s*$/, '').replace(/ /g,"-");;
     pageToVisit = "https://www.jw.org/en/publications/bible/nwt/books/" + book + "/" + chapter + "/";
@@ -40,7 +53,15 @@ function scripture(book, chapter, verseNum) {
         if(response.statusCode === 200) {
             var $ = cheerio.load(body);
             $('.verse span').children().remove();
-            var verse = $('[id$="' + verseNum + '"]').text();
+            var verse = '';
+            if (Array.isArray(verseNum)) {
+                for (v=0;v<verseNum.length;v++){
+                    verse += $('[id$="' + verseNum[v] + '"]').text();
+                }
+            } else {
+                verse = $('[id$="' + verseNum + '"]').text();
+            }
+            verse = verse.replace(/\r?\n|\r/g, ' ');
             console.log(verse);
         }
   });
