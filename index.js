@@ -34,17 +34,22 @@ function format(arr) {
 }
 
 function scripture(book, chapter, verseNum) {
+    verseNum = verseNum.replace(/\s/g, '');
     if (verseNum.indexOf(',') > -1) {
         verseNum = verseNum.split(',');
         verseNum = format(verseNum);
     } else if(verseNum.indexOf('-') > -1) {
         verseNum = verseNum.split('-');
-        var lowEnd = verseNum[0];
-        var highEnd = verseNum[1];
+        console.log(verseNum);
+        var lowEnd = parseInt(verseNum[0]);
+        var highEnd = parseInt(verseNum[1]);
+        console.log(lowEnd);
+        console.log(highEnd);
         verseNum = [];
         for (x=lowEnd; x<=highEnd; x++) {
             verseNum.push(x.toString());
         }
+        console.log(verseNum);
         verseNum = format(verseNum);
     } else {
         if (verseNum.length == 1) {
