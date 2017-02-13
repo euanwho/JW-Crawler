@@ -40,16 +40,12 @@ function scripture(book, chapter, verseNum) {
         verseNum = format(verseNum);
     } else if(verseNum.indexOf('-') > -1) {
         verseNum = verseNum.split('-');
-        console.log(verseNum);
         var lowEnd = parseInt(verseNum[0]);
         var highEnd = parseInt(verseNum[1]);
-        console.log(lowEnd);
-        console.log(highEnd);
         verseNum = [];
         for (x=lowEnd; x<=highEnd; x++) {
             verseNum.push(x.toString());
         }
-        console.log(verseNum);
         verseNum = format(verseNum);
     } else {
         if (verseNum.length == 1) {
@@ -71,7 +67,7 @@ function scripture(book, chapter, verseNum) {
      //console.log("Status code: " + response.statusCode);
         if(response.statusCode === 200) {
             var $ = cheerio.load(body);
-            $('.verse span').children().remove();
+            $('.verse span, .footnote').children().remove();
             var verse = '';
             if (Array.isArray(verseNum)) {
                 for (v=0;v<verseNum.length;v++){
